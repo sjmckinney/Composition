@@ -4,6 +4,7 @@ namespace Composition
 {
     public class CalcDob
     {
+        private static readonly Random rnd = new Random();
         public static string GetAdultDob()
         {
             DateTime min = DateTime.Now.AddYears(-19);
@@ -115,7 +116,6 @@ namespace Composition
         private static DateTime GetRandomDateTime(DateTime min, DateTime max)
         {
             var range = max - min;
-            var rnd = new Random();
             var randomUpperBound = (Int32)range.TotalSeconds;
 
             if (randomUpperBound <= 0)

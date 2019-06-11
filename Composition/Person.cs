@@ -5,8 +5,8 @@ namespace Composition
 {
     public class Person
     {
-        private static ChanceNET.Person person;
-        private static Chance chance;
+        private static Chance generator = new Chance();
+        private readonly Chance chance = generator.New();
 
         public String Title { get; set; }
         public String Forename { get; set; }
@@ -19,11 +19,34 @@ namespace Composition
 
         public Person()
         {
-            chance = new Chance();
-            person = chance.Person(gender: ChanceNET.Gender.Male);
+            var gender = new Gender().GetRandomGender();
+            var person = chance.Person(gender: gender.GenderType);
+            Gender = gender.GenderRef;
+
+            InitPersonDetails(person);
+        }
+
+        public Person(Gender gender)
+        {
+            var person = chance.Person(gender: gender.GenderType);
+            Gender = gender.GenderRef;
+
+            InitPersonDetails(person);
+        }
+
+        private void InitPersonDetails(ChanceNET.Person person)
+        {
+            Title = person.NamePrefix;
             Forename = person.FirstName;
+            Middlename = person.MiddleName;
             Surname = person.LastName;
+            Initial = GetInitials(Forename, Middlename);
             DateOfBirth = CalcDob.GetAdultDob();
+        }
+
+        private string GetInitials(string forename, string middlename)
+        {
+            return $"{forename.Substring(0,1)}{middlename.Substring(0,1)}";
         }
     }
 }
